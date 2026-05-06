@@ -8,12 +8,21 @@
   --accent2:#B5D8F6;
   --text:#444;
   --text-light:#888;
-  --bg:#F8F8FA;
-  --bg2:#FFFFFF;
-  --border:#E0E0EA;
+  --bg:#babaff;
+  --bg2:#ffacac;
+  --border:#afafff;
   --shadow:0 2px 8px rgba(163,201,168,0.10);
   --error:#FF8A80;
   --success:#A3C9A8;
+  /* Couleurs rôles pastel */
+  --admin:#B39DDB;
+  --host:#FFD54F;
+  --player:#81D4FA;
+  --verifier:#AED581;
+  /* Couleurs statuts vidéos pastel */
+  --pending:#FFF59D;
+  --approved:#A5D6A7;
+  --rejected:#FFAB91;
 }
 body{
   font-family:'Quicksand',sans-serif;
@@ -116,11 +125,48 @@ body{
   font-size:12px;
   padding:3px 10px;
   border-radius:20px;
-  border:1px solid var(--main);
   font-weight:600;
   letter-spacing:.3px;
   background:var(--accent2);
   color:var(--text);
+  border:1.5px solid var(--main);
+}
+.rbadge-admin{
+  background:var(--admin);
+  border-color:var(--admin);
+  color:#fff;
+}
+.rbadge-host{
+  background:var(--host);
+  border-color:var(--host);
+  color:#7B5E00;
+}
+.rbadge-player{
+  background:var(--player);
+  border-color:var(--player);
+  color:#006978;
+}
+.rbadge-verifier{
+  background:var(--verifier);
+  border-color:var(--verifier);
+  color:#33691E;
+}
+
+/* Statuts vidéo */
+.vstatus-pending{
+  background:var(--pending);
+  border-color:var(--pending);
+  color:#B59F00;
+}
+.vstatus-approved{
+  background:var(--approved);
+  border-color:var(--approved);
+  color:#1B5E20;
+}
+.vstatus-rejected{
+  background:var(--rejected);
+  border-color:var(--rejected);
+  color:#BF360C;
 }
 .body{padding:20px 24px;display:flex;flex-direction:column;gap:14px}
 .card{
@@ -148,7 +194,7 @@ body{
 .vlink{color:var(--accent2);font-size:14px;text-decoration:none;word-break:break-all}
 .vlink:hover{text-decoration:underline}
 .note-txt{font-size:13px;color:var(--text-light);margin-top:8px}
-.vstatus{font-size:13px;padding:4px 12px;border-radius:12px;font-weight:600;border:1px solid var(--main);background:var(--accent);color:var(--text)}
+.vstatus{font-size:13px;padding:4px 12px;border-radius:12px;font-weight:600;border:1.5px solid var(--main);background:var(--accent);color:var(--text)}
 .empty{text-align:center;padding:40px;color:var(--text-light);font-size:15px}
 .foot{display:flex;gap:22px;padding:14px 24px;border-top:1px solid var(--border);background:var(--bg2)}
 .stat .sv{font-family:'Quicksand',sans-serif;font-size:16px;font-weight:700}

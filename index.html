@@ -81,24 +81,20 @@ body{font-family:'Rajdhani',sans-serif;color:var(--tx);font-size:15px;background
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const {createClient}=supabase;
-let sb=null;
-let S={view:'setup',authTab:'login',appTab:'parts',user:null,profile:null,level:null,parts:[],videos:[],profiles:[],expanded:{},modal:null,editTitle:false,error:''};
-
-function cfg(){try{return JSON.parse(localStorage.getItem('gd_sb')||'null');}catch(e){return null;}}
-function saveCfg(u,k){localStorage.setItem('gd_sb',JSON.stringify({url:u,key:k}));}
+const SB_URL='https://xbnhwbcvtflygqjghlav.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhibmh3YmN2dGZseWdxamdobGF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5MDQ3NjksImV4cCI6MjA5MTQ4MDc2OX0.ckJa8Mc3nHHZPYvJjwwAIIi2g-jIdTxZCC0yLssthEA';
+let sb=createClient(SB_URL,SB_KEY);
+let S={view:'auth',authTab:'login',appTab:'parts',user:null,profile:null,level:null,parts:[],videos:[],profiles:[],expanded:{},modal:null,editTitle:false,error:''};
 
 async function init(){
-  const c=cfg();
-  if(!c){S.view='setup';render();return;}
   try{
-    sb=createClient(c.url,c.key);
     const {data:{session}}=await sb.auth.getSession();
     if(!session){S.view='auth';render();return;}
     S.user=session.user;
     await loadProfile();
     if(!S.profile){S.view='auth';S.error='Profil introuvable, réinscris-toi.';await sb.auth.signOut();render();return;}
     await loadData();S.view='app';render();
-  }catch(e){S.error=e.message;S.view='setup';render();}
+  }catch(e){S.error=e.message;S.view='auth';render();}
 }
 
 async function loadProfile(){
@@ -126,7 +122,6 @@ function vidStatusLabel(s){return {pending:'En attente',approved:'Validée',reje
 function render(){document.getElementById('root').innerHTML=buildHTML();attach();}
 
 function buildHTML(){
-  if(S.view==='setup')return buildSetup();
   if(S.view==='auth')return buildAuth();
   return buildApp();
 }
@@ -158,7 +153,7 @@ function buildAuth(){
       ${t==='signup'?`<div class="field"><label>PSEUDO</label><input id="a-uname" placeholder="NovemberX"></div>`:''}
       ${S.error?`<div class="err">${esc(S.error)}</div>`:''}
       <button class="btn gr" id="a-submit" style="width:100%;margin-top:8px">${t==='login'?'Se connecter':'Créer un compte'}</button>
-      <div style="text-align:center;margin-top:10px"><button class="btn sm rd" id="sb-reset">Changer de projet</button></div>
+
     </div>
   </div>`;
 }
@@ -330,14 +325,6 @@ function buildModal(){
 }
 
 function attach(){
-  document.getElementById('sb-connect')?.addEventListener('click',async()=>{
-    const u=(document.getElementById('sb-url').value||'').trim();
-    const k=(document.getElementById('sb-key').value||'').trim();
-    if(!u||!k){S.error='Remplis les deux champs.';render();return;}
-    try{sb=createClient(u,k);const {error}=await sb.from('levels').select('id').limit(1);if(error)throw error;saveCfg(u,k);S.error='';S.view='auth';render();}
-    catch(e){S.error='Connexion échouée : '+e.message;render();}
-  });
-  document.getElementById('sb-reset')?.addEventListener('click',()=>{localStorage.removeItem('gd_sb');S.view='setup';S.error='';render();});
   document.querySelectorAll('[data-authtab]').forEach(el=>el.addEventListener('click',()=>{S.authTab=el.dataset.authtab;S.error='';render();}));
 
   document.getElementById('a-submit')?.addEventListener('click',async()=>{

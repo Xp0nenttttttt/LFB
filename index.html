@@ -328,7 +328,7 @@ function buildApp(){
   return `
   ${S.modal?buildModal():''}
   <div class="hdr">
-    <span class="logo">GD COLLAB</span>
+    <span class="logo">La France Beat</span>
     ${editTitle&&isAdmin()
       ?`<input class="lvl-name" id="title-inp" value="${esc(level?.name||'')}" style="flex:1">`
       :`<div class="lvl-name" id="edit-title" style="${isAdmin()?'cursor:pointer':''}">${esc(level?.name||'Collab GD')}</div>`}

@@ -343,7 +343,7 @@ function buildApp(){
     ${isAdmin()?`<button class="btn sm gr" id="add-part">+ Partie</button>`:''}
     <div class="ubadge">
       <span>Connecté :</span><strong>${esc(profile?.username||'')}</strong>
-      <span class="rbadge rbadge-${profile?.role||''}">${roleLabel(profile?.role)}</span>
+      <span class="rbadge" style="${roleBadgeStyle(profile?.role)}">${roleLabel(profile?.role)}</span>
       <button class="btn sm rd" id="logout">Déco</button>
     </div>
   </div>
@@ -378,22 +378,13 @@ function buildPart(p,i){
   const player=p.profiles;
   const isMyPart=S.profile&&p.player_id===S.profile.id;
   const canClaim=S.profile&&!p.player_id;
+  return `<div class="card ${statusClass}">
     <div class="card-h" data-part="${p.id}">
       <span class="pnum">#${i+1}</span>
       <span class="prange">${p.from_pct}% → ${p.to_pct}%</span>
       <span class="pplayer ${player?'':'empty'}">${player?esc(player.username):'Libre'}</span>
       ${player?`<span class="rbadge" style="${roleBadgeStyle(player.role)}">${roleLabel(player.role)}</span>`:''}
       ${vid?`<span class="vstatus" style="${vidStatusStyle(vid.status)}">${vidStatusLabel(vid.status)}</span>`:''}
-      <div class="dot" style="background:${dotColor};margin-left:auto"></div>
-      <span class="chev ${open?'op':''}">▼</span>
-    </div>
-  return `<div class="card ${statusClass}">
-    <div class="card-h" data-part="${p.id}">
-      <span class="pnum">#${i+1}</span>
-      <span class="prange">${p.from_pct}% → ${p.to_pct}%</span>
-      <span class="pplayer ${player?'':'empty'}">${player?esc(player.username):'Libre'}</span>
-      ${player?`<span class="rbadge rbadge-${player.role}">${roleLabel(player.role)}</span>`:''}
-      ${vid?`<span class="vstatus vstatus-${vid.status}">${vidStatusLabel(vid.status)}</span>`:''}
       <div class="dot" style="background:${dotColor};margin-left:auto"></div>
       <span class="chev ${open?'op':''}">▼</span>
     </div>

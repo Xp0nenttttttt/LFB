@@ -170,10 +170,11 @@ function buildApp(){
       ?`<input class="lvl-name" id="title-inp" value="${esc(level?.name||'')}" style="flex:1">`
       :`<div class="lvl-name" id="edit-title" style="${isAdmin()?'cursor:pointer':''}">${esc(level?.name||'Collab GD')}</div>`}
     ${editTitle&&isAdmin()?`<button class="btn sm gr" id="save-title">OK</button>`:''}
-    ${isAdmin()?`<div class="nav">
+    <div class="nav">
       <button class="ntab ${appTab==='parts'?'active':''}" data-tab="parts">Parties</button>
-      <button class="ntab ${appTab==='admin'?'active':''}" data-tab="admin">Admin</button>
-    </div>`:''}
+      ${isAdmin()?`<button class="ntab ${appTab==='admin'?'active':''}" data-tab="admin">Admin</button>`:''}
+      <button class="ntab ${appTab==='info'?'active':''}" data-tab="info">ℹ Règles</button>
+    </div>
   </div>
   <div class="bar">
     ${isAdmin()?`<button class="btn sm gr" id="add-part">+ Partie</button>`:''}
@@ -183,7 +184,7 @@ function buildApp(){
       <button class="btn sm rd" id="logout">Déco</button>
     </div>
   </div>
-  ${appTab==='parts'?buildParts():buildAdmin()}
+  ${appTab==='parts'?buildParts():appTab==='admin'?buildAdmin():buildInfo()}
   <div class="pbar"><div class="pfill" style="width:${pct}%"></div></div>
   <div class="foot">
     <div class="stat"><div class="sv" style="color:var(--or)">${parts.length}</div><div class="sl">PARTIES</div></div>
@@ -227,7 +228,7 @@ function buildPart(p,i){
     ${open?`<div class="card-b">
       ${p.note?`<div class="note-txt">📝 ${esc(p.note)}</div>`:''}
       ${vid?`<div class="row"><span style="font-size:12px;color:var(--mu)">Vidéo :</span><a class="vlink" href="${esc(vid.url)}" target="_blank">${esc(vid.url)}</a></div>`:''}
-
+      ${vid?.hardest?`<div class="note-txt" style="color:var(--rd)">💀 Hardest : ${esc(vid.hardest)}</div>`:''}
       ${isAdmin()?`<div class="assign-inline">
         <label>ASSIGNÉ À</label>
         <select data-assign-select="${p.id}">${playerOptions(p.player_id)}</select>
@@ -242,6 +243,81 @@ function buildPart(p,i){
         ${isAdmin()?`<button class="btn sm" data-edit-part="${p.id}" style="border-color:var(--mu);color:var(--mu)">Modifier</button><button class="btn sm rd" data-del-part="${p.id}">Suppr.</button>`:''}
       </div>
     </div>`:''}
+  </div>`;
+}
+
+function buildInfo(){
+  return `<div class="body">
+    <div class="card" style="border-left:3px solid var(--or)">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--bd);font-family:'Orbitron',monospace;font-size:11px;color:var(--or);letter-spacing:.5px">🎮 C'EST QUOI UNE COLLAB GD ?</div>
+      <div style="padding:14px 16px;font-size:14px;line-height:1.8;color:var(--tx)">
+        Une <strong style="color:var(--yl)">collab Geometry Dash</strong> est un niveau créé à plusieurs mains. Chaque joueur crée et joue une <em>partie</em> du niveau (définie par un pourcentage de début et de fin). Le niveau final est ensuite assemblé par le host et soumis sur GD.
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--bl)">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--bd);font-family:'Orbitron',monospace;font-size:11px;color:var(--bl);letter-spacing:.5px">📋 COMMENT ÇA FONCTIONNE ICI ?</div>
+      <div style="padding:14px 16px;display:flex;flex-direction:column;gap:12px;font-size:14px;line-height:1.7">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-family:'Orbitron',monospace;font-size:16px;color:var(--or);min-width:28px">1.</span>
+          <div><strong style="color:var(--yl)">Revendique une partie</strong><br><span style="color:var(--mu)">Dans l'onglet Parties, ouvre une carte libre (indiquée "Libre") et clique sur <em>Revendiquer</em>. La partie t'est assignée.</span></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-family:'Orbitron',monospace;font-size:16px;color:var(--or);min-width:28px">2.</span>
+          <div><strong style="color:var(--yl)">Crée ta partie dans GD</strong><br><span style="color:var(--mu)">Utilise l'éditeur GD pour construire et décorer ta portion du niveau selon les consignes données par le host (style, difficulté, etc.).</span></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-family:'Orbitron',monospace;font-size:16px;color:var(--or);min-width:28px">3.</span>
+          <div><strong style="color:var(--yl)">Enregistre ta vidéo</strong><br><span style="color:var(--mu)">Fais une vidéo en complétant ta partie dans GD (run propre, pas de crash). Upload-la sur YouTube ou tout autre hébergeur.</span></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-family:'Orbitron',monospace;font-size:16px;color:var(--or);min-width:28px">4.</span>
+          <div><strong style="color:var(--yl)">Soumets ta vidéo</strong><br><span style="color:var(--mu)">Clique sur <em>Soumettre vidéo</em> sur ta carte et colle le lien. Indique aussi ton <em>hardest</em> (le moment le plus difficile de ta partie). La vidéo passe ensuite en validation.</span></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-family:'Orbitron',monospace;font-size:16px;color:var(--or);min-width:28px">5.</span>
+          <div><strong style="color:var(--yl)">Validation par un admin</strong><br><span style="color:var(--mu)">Un admin ou vérifieur regarde ta vidéo. Si elle est conforme, elle est <em style="color:var(--gr)">validée ✓</em>. Sinon, elle est <em style="color:var(--rd)">rejetée ✗</em> avec possibilité de re-soumettre.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--yl)">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--bd);font-family:'Orbitron',monospace;font-size:11px;color:var(--yl);letter-spacing:.5px">⚠️ RÈGLES À RESPECTER</div>
+      <div style="padding:14px 16px;display:flex;flex-direction:column;gap:8px;font-size:14px">
+        ${[
+          ['var(--gr)','Ta vidéo doit être un run <strong>sans crash</strong> sur toute ta partie.'],
+          ['var(--gr)','Le style visuel doit <strong>correspondre au thème</strong> de la collab défini par le host.'],
+          ['var(--gr)','Ton lien vidéo doit être <strong>public et accessible</strong> (pas de lien privé).'],
+          ['var(--rd)','Ne <strong>revendique pas une partie</strong> si tu ne peux pas la finir dans les délais.'],
+          ['var(--rd)','Pas de <strong>contenu offensant</strong> ou inapproprié dans ta partie.'],
+          ['var(--rd)','Ne soumet pas une vidéo si ta partie n\'est <strong>pas terminée et décorée</strong>.'],
+        ].map(([c,t])=>`<div style="display:flex;gap:8px;align-items:flex-start"><span style="color:${c};font-size:16px;line-height:1.2">◆</span><span style="color:var(--tx);line-height:1.6">${t}</span></div>`).join('')}
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--pu)">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--bd);font-family:'Orbitron',monospace;font-size:11px;color:var(--pu);letter-spacing:.5px">🏷️ LES RÔLES</div>
+      <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px;font-size:14px">
+        ${[
+          ['admin','Admin','Gère tout : parties, membres, vidéos, titre du niveau.'],
+          ['host','Host','Organise la collab, assigne les parties et valide les vidéos.'],
+          ['verifier','Vérif.','Peut regarder et valider/rejeter les vidéos soumises.'],
+          ['player','Joueur','Revendique une partie, soumet et modifie sa vidéo.'],
+        ].map(([r,label,desc])=>`<div style="display:flex;gap:10px;align-items:flex-start">
+          <span class="rbadge" style="${roleBadgeStyle(r)};flex-shrink:0">${label}</span>
+          <span style="color:var(--mu);line-height:1.5">${desc}</span>
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--mu)">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--bd);font-family:'Orbitron',monospace;font-size:11px;color:var(--mu);letter-spacing:.5px">💡 STATUTS DES VIDÉOS</div>
+      <div style="padding:14px 16px;display:flex;flex-direction:column;gap:8px;font-size:14px">
+        <div style="display:flex;gap:10px;align-items:center"><span class="vstatus" style="${vidStatusStyle('pending')}">${vidStatusLabel('pending')}</span><span style="color:var(--mu)">La vidéo a été soumise et attend d'être examinée.</span></div>
+        <div style="display:flex;gap:10px;align-items:center"><span class="vstatus" style="${vidStatusStyle('approved')}">${vidStatusLabel('approved')}</span><span style="color:var(--mu)">La vidéo est conforme, la partie est terminée !</span></div>
+        <div style="display:flex;gap:10px;align-items:center"><span class="vstatus" style="${vidStatusStyle('rejected')}">${vidStatusLabel('rejected')}</span><span style="color:var(--mu)">La vidéo a été refusée, tu peux en soumettre une nouvelle.</span></div>
+      </div>
+    </div>
   </div>`;
 }
 
@@ -288,6 +364,7 @@ function buildAdmin(){
           return `<div class="admin-row">
             <span class="name">${esc(v.profiles?.username||'')} — ${part?`${part.from_pct}%→${part.to_pct}%`:''}</span>
             <a class="vlink" href="${esc(v.url)}" target="_blank" style="font-size:12px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(v.url)}</a>
+            ${v.hardest?`<span style="font-size:11px;color:var(--rd);white-space:nowrap">💀 ${esc(v.hardest)}</span>`:''}
             <button class="btn sm gr" data-approve="${v.id}">✓</button>
             <button class="btn sm rd" data-reject="${v.id}">✗</button>
           </div>`;}).join('')}
@@ -317,6 +394,11 @@ function buildModal(){
       <h3>SOUMETTRE TA VIDÉO</h3>
       <p style="font-size:13px;color:var(--mu);margin-bottom:12px">Partie ${m.from_pct}% → ${m.to_pct}%</p>
       <div class="field"><label>LIEN VIDÉO</label><input id="m-url" value="${esc(m.url||'')}" placeholder="https://youtube.com/..."></div>
+      <div class="field">
+        <label>TON HARDEST 💀</label>
+        <input id="m-hardest" value="${esc(m.hardest||'')}" placeholder="ex: 67% le triple spike, 82% le ship…">
+        <div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.5">Décris la partie la plus difficile de ton run (moment, %, obstacle...).</div>
+      </div>
       <div class="hint">Ta vidéo sera soumise à validation par un admin.</div>
       ${S.error?`<div class="err">${esc(S.error)}</div>`:''}
       <div class="mbtns"><button class="btn sm" id="mod-cancel">Annuler</button><button class="btn sm bl" id="mod-ok">Soumettre</button></div>
@@ -382,7 +464,7 @@ function attach(){
     const id=+el.dataset.submitVideo;
     const part=S.parts.find(p=>p.id===id);
     const existing=videoFor(id);
-    S.modal={type:'video',part_id:id,from_pct:part.from_pct,to_pct:part.to_pct,url:existing?.url||''};S.error='';render();
+    S.modal={type:'video',part_id:id,from_pct:part.from_pct,to_pct:part.to_pct,url:existing?.url||'',hardest:existing?.hardest||''};S.error='';render();
   }));
   document.querySelectorAll('[data-edit-part]').forEach(el=>el.addEventListener('click',()=>{
     const p=S.parts.find(p=>p.id===+el.dataset.editPart);
@@ -417,10 +499,11 @@ function attach(){
       S.modal=null;await loadData();render();
     } else if(m.type==='video'){
       const url=(document.getElementById('m-url').value||'').trim();
+      const hardest=(document.getElementById('m-hardest').value||'').trim();
       if(!url){S.error='Entre un lien.';render();return;}
       const existing=videoFor(m.part_id);
-      if(existing){await sb.from('videos').update({url,status:'pending'}).eq('id',existing.id);}
-      else{await sb.from('videos').insert({part_id:m.part_id,player_id:S.profile.id,url,status:'pending'});}
+      if(existing){await sb.from('videos').update({url,hardest,status:'pending'}).eq('id',existing.id);}
+      else{await sb.from('videos').insert({part_id:m.part_id,player_id:S.profile.id,url,hardest,status:'pending'});}
       S.modal=null;await loadData();render();
     }
   });

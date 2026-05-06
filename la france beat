@@ -1,0 +1,443 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--or:#FF7F00;--yl:#FFD600;--bl:#00B4FF;--gr:#00E676;--rd:#FF3D3D;--pu:#BB86FC;--bg:#0D0D14;--bg2:#13131F;--bg3:#1A1A2E;--bd:#2A2A4A;--tx:#E8E8F0;--mu:#6060A0}
+body{font-family:'Rajdhani',sans-serif;color:var(--tx);font-size:15px;background:transparent}
+.app{background:var(--bg);border-radius:12px;border:1px solid var(--bd);overflow:hidden;min-height:500px}
+.hdr{background:var(--bg2);border-bottom:2px solid var(--or);padding:13px 18px;display:flex;align-items:center;gap:12px}
+.logo{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;color:var(--or);letter-spacing:2px}
+.lvl-name{font-family:'Orbitron',monospace;font-size:17px;font-weight:900;color:var(--yl);flex:1}
+.lvl-name input{background:transparent;border:none;border-bottom:2px solid var(--yl);color:var(--yl);font-family:'Orbitron',monospace;font-size:17px;font-weight:900;outline:none;width:100%}
+.nav{display:flex;gap:6px}
+.ntab{background:transparent;border:1px solid var(--bd);color:var(--mu);padding:5px 12px;border-radius:6px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.ntab.active,.ntab:hover{border-color:var(--or);color:var(--or)}.ntab.active{background:rgba(255,127,0,.1)}
+.bar{background:var(--bg2);border-bottom:1px solid var(--bd);padding:10px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-height:48px}
+.btn{background:transparent;border:1.5px solid var(--or);color:var(--or);padding:6px 14px;border-radius:6px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;letter-spacing:.3px}
+.btn:hover{background:var(--or);color:#000}.btn:disabled{opacity:.3;cursor:not-allowed}
+.btn.bl{border-color:var(--bl);color:var(--bl)}.btn.bl:hover{background:var(--bl);color:#000}
+.btn.gr{border-color:var(--gr);color:var(--gr)}.btn.gr:hover{background:var(--gr);color:#000}
+.btn.rd{border-color:var(--rd);color:var(--rd)}.btn.rd:hover{background:var(--rd);color:#000}
+.btn.pu{border-color:var(--pu);color:var(--pu)}.btn.pu:hover{background:var(--pu);color:#000}
+.btn.yl{border-color:var(--yl);color:var(--yl)}.btn.yl:hover{background:var(--yl);color:#000}
+.btn.sm{padding:4px 10px;font-size:12px}
+.ubadge{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mu)}
+.ubadge strong{color:var(--bl)}
+.rbadge{font-size:11px;padding:2px 8px;border-radius:20px;border:1px solid;font-weight:600;letter-spacing:.3px}
+.body{padding:14px 18px;display:flex;flex-direction:column;gap:10px}
+.card{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;overflow:hidden;transition:border-color .15s}
+.card:hover{border-color:#3A3A6A}
+.card.cdone{border-left:3px solid var(--gr)}.card.cclaim{border-left:3px solid var(--yl)}.card.copen{border-left:3px solid var(--bd)}
+.card-h{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;user-select:none}
+.pnum{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--or);min-width:26px}
+.prange{font-size:14px;color:var(--mu);min-width:90px;font-weight:500}
+.pplayer{flex:1;font-size:15px;font-weight:600}
+.pplayer.empty{color:var(--mu);font-style:italic;font-weight:400}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.chev{font-size:11px;color:var(--mu);transition:transform .2s;margin-left:4px}
+.chev.op{transform:rotate(180deg)}
+.card-b{padding:0 14px 12px;border-top:1px solid var(--bd)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.vlink{color:var(--bl);font-size:13px;text-decoration:none;word-break:break-all}
+.vlink:hover{text-decoration:underline}
+.note-txt{font-size:12px;color:var(--mu);margin-top:8px}
+.vstatus{font-size:12px;padding:3px 9px;border-radius:12px;font-weight:600;border:1px solid}
+.empty{text-align:center;padding:40px;color:var(--mu);font-size:14px}
+.foot{display:flex;gap:18px;padding:10px 18px;border-top:1px solid var(--bd);background:var(--bg2)}
+.stat .sv{font-family:'Orbitron',monospace;font-size:15px;font-weight:700}
+.stat .sl{font-size:11px;color:var(--mu);letter-spacing:.4px;margin-top:2px}
+.pbar{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;margin:8px 18px 0}
+.pfill{height:100%;background:var(--gr);border-radius:3px;transition:width .4s}
+.mod-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:999}
+.mod{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:22px;width:380px;max-width:94vw;max-height:90vh;overflow-y:auto}
+.mod h3{font-family:'Orbitron',monospace;font-size:12px;color:var(--yl);margin-bottom:16px;letter-spacing:1px}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.field label{font-size:11px;color:var(--mu);letter-spacing:.5px}
+.field input,.field select{background:var(--bg3);border:1px solid var(--bd);border-radius:6px;padding:8px 10px;color:var(--tx);font-family:'Rajdhani',sans-serif;font-size:14px;outline:none;width:100%}
+.field input:focus,.field select:focus{border-color:var(--bl)}
+.field select option{background:var(--bg2)}
+.mbtns{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.err{color:var(--rd);font-size:12px;margin-top:8px;padding:8px 10px;background:rgba(255,61,61,.08);border-radius:6px;border:1px solid rgba(255,61,61,.2)}
+.setup-wrap{padding:30px 20px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.setup-wrap h2{font-family:'Orbitron',monospace;font-size:14px;color:var(--yl);letter-spacing:1px;text-align:center}
+.setup-form{width:100%;max-width:360px;display:flex;flex-direction:column;gap:10px}
+.tabs{display:flex;border-bottom:1px solid var(--bd);margin-bottom:14px}
+.tab{background:transparent;border:none;border-bottom:2px solid transparent;color:var(--mu);padding:8px 16px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;margin-bottom:-1px}
+.tab.active{color:var(--or);border-bottom-color:var(--or)}
+.admin-row{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--bd);font-size:14px;flex-wrap:wrap}
+.admin-row:last-child{border-bottom:none}
+.admin-row .name{flex:1;font-weight:600;min-width:80px}
+.hint{font-size:12px;color:var(--mu);margin-top:6px;line-height:1.5;padding:8px 10px;background:rgba(0,180,255,.06);border-radius:6px;border:1px solid rgba(0,180,255,.15)}
+.sep{height:1px;background:var(--bd);margin:4px 0}
+.assign-inline{display:flex;gap:6px;align-items:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--bd);flex-wrap:wrap}
+.assign-inline label{font-size:11px;color:var(--mu);letter-spacing:.4px;white-space:nowrap}
+.assign-inline select{background:var(--bg3);border:1px solid var(--bd);border-radius:6px;padding:5px 8px;color:var(--tx);font-family:'Rajdhani',sans-serif;font-size:13px;outline:none;flex:1;min-width:100px}
+.assign-inline select:focus{border-color:var(--yl)}
+.assign-inline select option{background:var(--bg2)}
+</style>
+
+<div class="app" id="root"><div class="body"><div class="empty">Chargement...</div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const {createClient}=supabase;
+let sb=null;
+let S={view:'setup',authTab:'login',appTab:'parts',user:null,profile:null,level:null,parts:[],videos:[],profiles:[],expanded:{},modal:null,editTitle:false,error:''};
+
+function cfg(){try{return JSON.parse(localStorage.getItem('gd_sb')||'null');}catch(e){return null;}}
+function saveCfg(u,k){localStorage.setItem('gd_sb',JSON.stringify({url:u,key:k}));}
+
+async function init(){
+  const c=cfg();
+  if(!c){S.view='setup';render();return;}
+  try{
+    sb=createClient(c.url,c.key);
+    const {data:{session}}=await sb.auth.getSession();
+    if(!session){S.view='auth';render();return;}
+    S.user=session.user;
+    await loadProfile();
+    if(!S.profile){S.view='auth';S.error='Profil introuvable, réinscris-toi.';await sb.auth.signOut();render();return;}
+    await loadData();S.view='app';render();
+  }catch(e){S.error=e.message;S.view='setup';render();}
+}
+
+async function loadProfile(){
+  const {data}=await sb.from('profiles').select('*').eq('id',S.user.id).single();
+  S.profile=data;
+}
+async function loadData(){
+  const [{data:lv},{data:pts},{data:vids},{data:profs}]=await Promise.all([
+    sb.from('levels').select('*').single(),
+    sb.from('parts').select('*,profiles(id,username,role)').order('from_pct'),
+    sb.from('videos').select('*,profiles(username)').order('created_at'),
+    sb.from('profiles').select('*').order('username'),
+  ]);
+  S.level=lv;S.parts=pts||[];S.videos=vids||[];S.profiles=profs||[];
+}
+
+function isAdmin(){return S.profile&&['admin','host'].includes(S.profile.role);}
+function videoFor(pid){return S.videos.find(v=>v.part_id===pid);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function roleBadgeStyle(r){const c={admin:'var(--pu)',host:'var(--yl)',player:'var(--bl)',verifier:'var(--gr)'}[r]||'var(--mu)';return `border-color:${c};color:${c}`;}
+function roleLabel(r){return {admin:'Admin',host:'Host',player:'Joueur',verifier:'Vérif.'}[r]||r||'';}
+function vidStatusStyle(s){const c={pending:'var(--yl)',approved:'var(--gr)',rejected:'var(--rd)'}[s]||'var(--mu)';return `border-color:${c};color:${c}`;}
+function vidStatusLabel(s){return {pending:'En attente',approved:'Validée',rejected:'Rejetée'}[s]||s;}
+
+function render(){document.getElementById('root').innerHTML=buildHTML();attach();}
+
+function buildHTML(){
+  if(S.view==='setup')return buildSetup();
+  if(S.view==='auth')return buildAuth();
+  return buildApp();
+}
+
+function buildSetup(){
+  return `<div class="setup-wrap">
+    <h2>CONFIGURATION SUPABASE</h2>
+    <p style="font-size:13px;color:var(--mu);text-align:center;max-width:300px;line-height:1.6">Entre les identifiants de ton projet Supabase (Settings → API).</p>
+    <div class="setup-form">
+      <div class="field"><label>URL DU PROJET</label><input id="sb-url" placeholder="https://xxxx.supabase.co"></div>
+      <div class="field"><label>ANON / PUBLIC KEY</label><input id="sb-key" placeholder="eyJhb..."></div>
+      ${S.error?`<div class="err">${esc(S.error)}</div>`:''}
+      <button class="btn gr" id="sb-connect">Connecter</button>
+    </div>
+  </div>`;
+}
+
+function buildAuth(){
+  const t=S.authTab;
+  return `<div style="padding:30px 20px;display:flex;flex-direction:column;align-items:center">
+    <div style="font-family:'Orbitron',monospace;font-size:14px;color:var(--yl);margin-bottom:20px;letter-spacing:1px">GD COLLAB</div>
+    <div style="width:100%;max-width:340px">
+      <div class="tabs">
+        <button class="tab ${t==='login'?'active':''}" data-authtab="login">Connexion</button>
+        <button class="tab ${t==='signup'?'active':''}" data-authtab="signup">Inscription</button>
+      </div>
+      <div class="field"><label>EMAIL</label><input id="a-email" type="email" placeholder="toi@exemple.com"></div>
+      <div class="field"><label>MOT DE PASSE</label><input id="a-pwd" type="password" placeholder="••••••••"></div>
+      ${t==='signup'?`<div class="field"><label>PSEUDO</label><input id="a-uname" placeholder="NovemberX"></div>`:''}
+      ${S.error?`<div class="err">${esc(S.error)}</div>`:''}
+      <button class="btn gr" id="a-submit" style="width:100%;margin-top:8px">${t==='login'?'Se connecter':'Créer un compte'}</button>
+      <div style="text-align:center;margin-top:10px"><button class="btn sm rd" id="sb-reset">Changer de projet</button></div>
+    </div>
+  </div>`;
+}
+
+function buildApp(){
+  const {level,parts,appTab,profile,editTitle}=S;
+  const done=parts.filter(p=>videoFor(p.id)?.status==='approved').length;
+  const pct=parts.length?Math.round(done/parts.length*100):0;
+  return `
+  ${S.modal?buildModal():''}
+  <div class="hdr">
+    <span class="logo">GD COLLAB</span>
+    ${editTitle&&isAdmin()
+      ?`<input class="lvl-name" id="title-inp" value="${esc(level?.name||'')}" style="flex:1">`
+      :`<div class="lvl-name" id="edit-title" style="${isAdmin()?'cursor:pointer':''}">${esc(level?.name||'Collab GD')}</div>`}
+    ${editTitle&&isAdmin()?`<button class="btn sm gr" id="save-title">OK</button>`:''}
+    ${isAdmin()?`<div class="nav">
+      <button class="ntab ${appTab==='parts'?'active':''}" data-tab="parts">Parties</button>
+      <button class="ntab ${appTab==='admin'?'active':''}" data-tab="admin">Admin</button>
+    </div>`:''}
+  </div>
+  <div class="bar">
+    ${isAdmin()?`<button class="btn sm gr" id="add-part">+ Partie</button>`:''}
+    <div class="ubadge">
+      <span>Connecté :</span><strong>${esc(profile?.username||'')}</strong>
+      <span class="rbadge" style="${roleBadgeStyle(profile?.role)}">${roleLabel(profile?.role)}</span>
+      <button class="btn sm rd" id="logout">Déco</button>
+    </div>
+  </div>
+  ${appTab==='parts'?buildParts():buildAdmin()}
+  <div class="pbar"><div class="pfill" style="width:${pct}%"></div></div>
+  <div class="foot">
+    <div class="stat"><div class="sv" style="color:var(--or)">${parts.length}</div><div class="sl">PARTIES</div></div>
+    <div class="stat"><div class="sv" style="color:var(--yl)">${parts.filter(p=>p.player_id).length}</div><div class="sl">PRISES</div></div>
+    <div class="stat"><div class="sv" style="color:var(--pu)">${S.videos.filter(v=>v.status==='pending').length}</div><div class="sl">EN ATTENTE</div></div>
+    <div class="stat"><div class="sv" style="color:var(--gr)">${done}</div><div class="sl">VALIDÉES</div></div>
+    <div class="stat"><div class="sv" style="color:var(--mu)">${pct}%</div><div class="sl">COMPLET</div></div>
+  </div>`;
+}
+
+function buildParts(){
+  const {parts}=S;
+  if(!parts.length)return `<div class="body"><div class="empty">Aucune partie.<br>${isAdmin()?'Crée des parties pour démarrer !':'En attente de l\'admin.'}</div></div>`;
+  return `<div class="body">${parts.map((p,i)=>buildPart(p,i)).join('')}</div>`;
+}
+
+function playerOptions(selectedId){
+  const none=`<option value="" ${!selectedId?'selected':''}>— Personne —</option>`;
+  const opts=S.profiles.map(pr=>`<option value="${pr.id}" ${selectedId===pr.id?'selected':''}>${esc(pr.username)} (${roleLabel(pr.role)})</option>`).join('');
+  return none+opts;
+}
+
+function buildPart(p,i){
+  const vid=videoFor(p.id);
+  const open=S.expanded[p.id];
+  const statusClass=vid?.status==='approved'?'cdone':(p.player_id?'cclaim':'copen');
+  const dotColor=vid?.status==='approved'?'var(--gr)':(p.player_id?'var(--yl)':'#444');
+  const player=p.profiles;
+  const isMyPart=S.profile&&p.player_id===S.profile.id;
+  const canClaim=S.profile&&!p.player_id;
+  return `<div class="card ${statusClass}">
+    <div class="card-h" data-part="${p.id}">
+      <span class="pnum">#${i+1}</span>
+      <span class="prange">${p.from_pct}% → ${p.to_pct}%</span>
+      <span class="pplayer ${player?'':'empty'}">${player?esc(player.username):'Libre'}</span>
+      ${player?`<span class="rbadge" style="${roleBadgeStyle(player.role)}">${roleLabel(player.role)}</span>`:''}
+      ${vid?`<span class="vstatus" style="${vidStatusStyle(vid.status)}">${vidStatusLabel(vid.status)}</span>`:''}
+      <div class="dot" style="background:${dotColor};margin-left:auto"></div>
+      <span class="chev ${open?'op':''}">▼</span>
+    </div>
+    ${open?`<div class="card-b">
+      ${p.note?`<div class="note-txt">📝 ${esc(p.note)}</div>`:''}
+      ${vid?`<div class="row"><span style="font-size:12px;color:var(--mu)">Vidéo :</span><a class="vlink" href="${esc(vid.url)}" target="_blank">${esc(vid.url)}</a></div>`:''}
+
+      ${isAdmin()?`<div class="assign-inline">
+        <label>ASSIGNÉ À</label>
+        <select data-assign-select="${p.id}">${playerOptions(p.player_id)}</select>
+        <button class="btn sm yl" data-assign-save="${p.id}">Assigner</button>
+      </div>`:''}
+
+      <div class="row">
+        ${!isAdmin()&&canClaim?`<button class="btn sm gr" data-claim="${p.id}">Revendiquer</button>`:''}
+        ${isMyPart&&!vid?`<button class="btn sm bl" data-submit-video="${p.id}">Soumettre vidéo</button>`:''}
+        ${isMyPart&&vid&&vid.status!=='approved'?`<button class="btn sm bl" data-submit-video="${p.id}">Modifier vidéo</button>`:''}
+        ${isAdmin()&&vid?.status==='pending'?`<button class="btn sm gr" data-approve="${vid.id}">Valider</button><button class="btn sm rd" data-reject="${vid.id}">Rejeter</button>`:''}
+        ${isAdmin()?`<button class="btn sm" data-edit-part="${p.id}" style="border-color:var(--mu);color:var(--mu)">Modifier</button><button class="btn sm rd" data-del-part="${p.id}">Suppr.</button>`:''}
+      </div>
+    </div>`:''}
+  </div>`;
+}
+
+function buildAdmin(){
+  return `<div class="body">
+    <div class="card">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--bd);font-family:'Orbitron',monospace;font-size:11px;color:var(--yl);letter-spacing:.5px">GESTION DES MEMBRES</div>
+      ${S.profiles.length===0
+        ?`<div class="empty" style="padding:20px">Aucun membre</div>`
+        :S.profiles.map(pr=>`<div class="admin-row">
+          <span class="name">${esc(pr.username)}</span>
+          <span class="rbadge" style="${roleBadgeStyle(pr.role)}">${roleLabel(pr.role)}</span>
+          <select data-role-uid="${pr.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:5px;padding:4px 8px;color:var(--tx);font-family:'Rajdhani',sans-serif;font-size:13px">
+            ${['admin','host','player','verifier'].map(r=>`<option value="${r}" ${pr.role===r?'selected':''}>${roleLabel(r)}</option>`).join('')}
+          </select>
+          <button class="btn sm pu" data-save-role="${pr.id}">Sauver</button>
+        </div>`).join('')}
+    </div>
+
+    <div class="card">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--bd);font-family:'Orbitron',monospace;font-size:11px;color:var(--yl);letter-spacing:.5px">ASSIGNATION RAPIDE DES PARTIES</div>
+      ${S.parts.length===0
+        ?`<div class="empty" style="padding:20px">Aucune partie créée</div>`
+        :S.parts.map((p,i)=>{
+          const player=p.profiles;
+          const vid=videoFor(p.id);
+          return `<div class="admin-row">
+            <span class="name" style="min-width:90px">#${i+1} — ${p.from_pct}%→${p.to_pct}%</span>
+            <select data-assign-select="${p.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:5px;padding:4px 8px;color:var(--tx);font-family:'Rajdhani',sans-serif;font-size:13px;flex:1">
+              ${playerOptions(p.player_id)}
+            </select>
+            <button class="btn sm yl" data-assign-save="${p.id}">Assigner</button>
+            ${vid?`<span class="vstatus" style="${vidStatusStyle(vid.status)}">${vidStatusLabel(vid.status)}</span>`:''}
+          </div>`;
+        }).join('')}
+    </div>
+
+    <div class="card">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--bd);font-family:'Orbitron',monospace;font-size:11px;color:var(--yl);letter-spacing:.5px">VIDÉOS EN ATTENTE</div>
+      ${S.videos.filter(v=>v.status==='pending').length===0
+        ?`<div class="empty" style="padding:20px">Aucune vidéo en attente</div>`
+        :S.videos.filter(v=>v.status==='pending').map(v=>{
+          const part=S.parts.find(p=>p.id===v.part_id);
+          return `<div class="admin-row">
+            <span class="name">${esc(v.profiles?.username||'')} — ${part?`${part.from_pct}%→${part.to_pct}%`:''}</span>
+            <a class="vlink" href="${esc(v.url)}" target="_blank" style="font-size:12px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(v.url)}</a>
+            <button class="btn sm gr" data-approve="${v.id}">✓</button>
+            <button class="btn sm rd" data-reject="${v.id}">✗</button>
+          </div>`;}).join('')}
+    </div>
+  </div>`;
+}
+
+function buildModal(){
+  const m=S.modal;
+  if(m.type==='part')return `<div class="mod-bg" id="mod-bg">
+    <div class="mod">
+      <h3>${m.edit?'MODIFIER LA PARTIE':'NOUVELLE PARTIE'}</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="field"><label>DE (%)</label><input id="m-from" type="number" min="0" max="100" value="${m.from||''}" placeholder="0"></div>
+        <div class="field"><label>À (%)</label><input id="m-to" type="number" min="0" max="100" value="${m.to||''}" placeholder="10"></div>
+      </div>
+      <div class="field">
+        <label>ASSIGNER À UN JOUEUR</label>
+        <select id="m-player">${playerOptions(m.player_id||null)}</select>
+      </div>
+      <div class="field"><label>NOTE (optionnel)</label><input id="m-note" value="${esc(m.note||'')}" placeholder="Instructions..."></div>
+      ${S.error?`<div class="err">${esc(S.error)}</div>`:''}
+      <div class="mbtns"><button class="btn sm" id="mod-cancel">Annuler</button><button class="btn sm gr" id="mod-ok">${m.edit?'Sauvegarder':'Créer'}</button></div>
+    </div></div>`;
+  if(m.type==='video')return `<div class="mod-bg" id="mod-bg">
+    <div class="mod">
+      <h3>SOUMETTRE TA VIDÉO</h3>
+      <p style="font-size:13px;color:var(--mu);margin-bottom:12px">Partie ${m.from_pct}% → ${m.to_pct}%</p>
+      <div class="field"><label>LIEN VIDÉO</label><input id="m-url" value="${esc(m.url||'')}" placeholder="https://youtube.com/..."></div>
+      <div class="hint">Ta vidéo sera soumise à validation par un admin.</div>
+      ${S.error?`<div class="err">${esc(S.error)}</div>`:''}
+      <div class="mbtns"><button class="btn sm" id="mod-cancel">Annuler</button><button class="btn sm bl" id="mod-ok">Soumettre</button></div>
+    </div></div>`;
+  return '';
+}
+
+function attach(){
+  document.getElementById('sb-connect')?.addEventListener('click',async()=>{
+    const u=(document.getElementById('sb-url').value||'').trim();
+    const k=(document.getElementById('sb-key').value||'').trim();
+    if(!u||!k){S.error='Remplis les deux champs.';render();return;}
+    try{sb=createClient(u,k);const {error}=await sb.from('levels').select('id').limit(1);if(error)throw error;saveCfg(u,k);S.error='';S.view='auth';render();}
+    catch(e){S.error='Connexion échouée : '+e.message;render();}
+  });
+  document.getElementById('sb-reset')?.addEventListener('click',()=>{localStorage.removeItem('gd_sb');S.view='setup';S.error='';render();});
+  document.querySelectorAll('[data-authtab]').forEach(el=>el.addEventListener('click',()=>{S.authTab=el.dataset.authtab;S.error='';render();}));
+
+  document.getElementById('a-submit')?.addEventListener('click',async()=>{
+    const email=(document.getElementById('a-email').value||'').trim();
+    const pwd=document.getElementById('a-pwd').value||'';
+    S.error='';
+    if(S.authTab==='signup'){
+      const uname=(document.getElementById('a-uname').value||'').trim();
+      if(!uname){S.error='Pseudo requis.';render();return;}
+      const {data,error}=await sb.auth.signUp({email,password:pwd,options:{data:{username:uname}}});
+      if(error){S.error=error.message;render();return;}
+      S.user=data.user;
+      await new Promise(r=>setTimeout(r,800));
+    } else {
+      const {data,error}=await sb.auth.signInWithPassword({email,password:pwd});
+      if(error){S.error=error.message;render();return;}
+      S.user=data.user;
+    }
+    await loadProfile();
+    if(!S.profile){S.error='Profil non créé. Vérifie que le trigger SQL est bien installé.';render();return;}
+    await loadData();S.view='app';render();
+  });
+
+  document.getElementById('logout')?.addEventListener('click',async()=>{await sb.auth.signOut();S.user=null;S.profile=null;S.view='auth';S.error='';render();});
+  document.querySelectorAll('[data-tab]').forEach(el=>el.addEventListener('click',()=>{S.appTab=el.dataset.tab;render();}));
+  document.getElementById('edit-title')?.addEventListener('click',()=>{if(isAdmin()){S.editTitle=true;render();}});
+  document.getElementById('save-title')?.addEventListener('click',async()=>{
+    const v=(document.getElementById('title-inp').value||'').trim();
+    if(v){await sb.from('levels').update({name:v}).eq('id',S.level.id);S.level.name=v;}
+    S.editTitle=false;render();
+  });
+  document.getElementById('add-part')?.addEventListener('click',()=>{S.modal={type:'part'};S.error='';render();});
+
+  // Assigner un joueur (inline dans la carte ou dans l'onglet admin)
+  document.querySelectorAll('[data-assign-save]').forEach(el=>el.addEventListener('click',async()=>{
+    const partId=+el.dataset.assignSave;
+    const sel=document.querySelector(`[data-assign-select="${partId}"]`);
+    if(!sel)return;
+    const playerId=sel.value||null;
+    await sb.from('parts').update({player_id:playerId}).eq('id',partId);
+    // Si on libère, on supprime aussi la vidéo associée
+    if(!playerId) await sb.from('videos').delete().eq('part_id',partId);
+    await loadData();render();
+  }));
+
+  document.querySelectorAll('[data-part]').forEach(el=>el.addEventListener('click',e=>{
+    if(e.target.closest('button,a,select'))return;
+    const id=+el.dataset.part;S.expanded[id]=!S.expanded[id];render();
+  }));
+  document.querySelectorAll('[data-claim]').forEach(el=>el.addEventListener('click',async()=>{
+    await sb.from('parts').update({player_id:S.profile.id}).eq('id',+el.dataset.claim);
+    await loadData();render();
+  }));
+  document.querySelectorAll('[data-submit-video]').forEach(el=>el.addEventListener('click',()=>{
+    const id=+el.dataset.submitVideo;
+    const part=S.parts.find(p=>p.id===id);
+    const existing=videoFor(id);
+    S.modal={type:'video',part_id:id,from_pct:part.from_pct,to_pct:part.to_pct,url:existing?.url||''};S.error='';render();
+  }));
+  document.querySelectorAll('[data-edit-part]').forEach(el=>el.addEventListener('click',()=>{
+    const p=S.parts.find(p=>p.id===+el.dataset.editPart);
+    S.modal={type:'part',edit:p.id,from:p.from_pct,to:p.to_pct,note:p.note||'',player_id:p.player_id};S.error='';render();
+  }));
+  document.querySelectorAll('[data-del-part]').forEach(el=>el.addEventListener('click',async()=>{
+    await sb.from('parts').delete().eq('id',+el.dataset.delPart);await loadData();render();
+  }));
+  document.querySelectorAll('[data-approve]').forEach(el=>el.addEventListener('click',async()=>{
+    await sb.from('videos').update({status:'approved'}).eq('id',+el.dataset.approve);await loadData();render();
+  }));
+  document.querySelectorAll('[data-reject]').forEach(el=>el.addEventListener('click',async()=>{
+    await sb.from('videos').update({status:'rejected'}).eq('id',+el.dataset.reject);await loadData();render();
+  }));
+  document.querySelectorAll('[data-save-role]').forEach(el=>el.addEventListener('click',async()=>{
+    const uid=el.dataset.saveRole;
+    const sel=document.querySelector(`[data-role-uid="${uid}"]`);
+    if(sel){await sb.from('profiles').update({role:sel.value}).eq('id',uid);await loadData();render();}
+  }));
+  document.getElementById('mod-bg')?.addEventListener('click',e=>{if(e.target.id==='mod-bg'){S.modal=null;render();}});
+  document.getElementById('mod-cancel')?.addEventListener('click',()=>{S.modal=null;render();});
+  document.getElementById('mod-ok')?.addEventListener('click',async()=>{
+    const m=S.modal;S.error='';
+    if(m.type==='part'){
+      const from=document.getElementById('m-from').value;
+      const to=document.getElementById('m-to').value;
+      const note=(document.getElementById('m-note').value||'').trim();
+      const player_id=document.getElementById('m-player').value||null;
+      if(from===''||to===''){S.error='Remplis les % de début et fin.';render();return;}
+      if(m.edit){await sb.from('parts').update({from_pct:+from,to_pct:+to,note,player_id}).eq('id',m.edit);}
+      else{await sb.from('parts').insert({from_pct:+from,to_pct:+to,note,player_id,level_id:S.level.id});}
+      S.modal=null;await loadData();render();
+    } else if(m.type==='video'){
+      const url=(document.getElementById('m-url').value||'').trim();
+      if(!url){S.error='Entre un lien.';render();return;}
+      const existing=videoFor(m.part_id);
+      if(existing){await sb.from('videos').update({url,status:'pending'}).eq('id',existing.id);}
+      else{await sb.from('videos').insert({part_id:m.part_id,player_id:S.profile.id,url,status:'pending'});}
+      S.modal=null;await loadData();render();
+    }
+  });
+}
+
+init();
+</script>

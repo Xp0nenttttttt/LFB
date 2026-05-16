@@ -1,4 +1,7 @@
 
+</script>
+
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -392,6 +395,7 @@ function buildPart(p,i){
       ${p.note?`<div class="note-txt">📝 ${esc(p.note)}</div>`:''}
       ${vid?`<div class="row"><span style="font-size:12px;color:var(--mu)">Vidéo :</span><a class="vlink" href="${esc(vid.url)}" target="_blank">${esc(vid.url)}</a></div>`:''}
       ${vid?.hardest?`<div class="note-txt" style="color:var(--rd)">💀 Hardest : ${esc(vid.hardest)}</div>`:''}
+      ${vid?.status==='rejected'&&vid?.reject_reason?`<div class="note-txt" style="color:var(--rd);background:rgba(255,138,128,.10);border:1px solid rgba(255,138,128,.25);border-radius:8px;padding:8px 12px;margin-top:6px">❌ Raison du refus : <strong>${esc(vid.reject_reason)}</strong></div>`:''}
       ${isAdmin()?`<div class="assign-inline">
         <label>ASSIGNÉ À</label>
         <select data-assign-select="${p.id}">${playerOptions(p.player_id)}</select>
@@ -509,7 +513,7 @@ function buildAdmin(){
             <a class="vlink" href="${esc(v.url)}" target="_blank" style="font-size:12px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(v.url)}</a>
             ${v.hardest?`<span style="font-size:11px;color:var(--rd);white-space:nowrap">💀 ${esc(v.hardest)}</span>`:''}
             <button class="btn sm gr" data-approve="${v.id}">✓</button>
-            <button class="btn sm rd" data-reject="${v.id}">✗</button>
+            <button class="btn sm rd" data-reject="${v.id}">✗ Refuser</button>
           </div>`;}).join('')}
     </div>
   </div>`;
@@ -531,6 +535,17 @@ function buildModal(){
       <div class="field"><label>NOTE (optionnel)</label><input id="m-note" value="${esc(m.note||'')}" placeholder="Instructions..."></div>
       ${S.error?`<div class="err">${esc(S.error)}</div>`:''}
       <div class="mbtns"><button class="btn sm" id="mod-cancel">Annuler</button><button class="btn sm gr" id="mod-ok">${m.edit?'Sauvegarder':'Créer'}</button></div>
+    </div></div>`;
+  if(m.type==='reject')return `<div class="mod-bg" id="mod-bg">
+    <div class="mod">
+      <h3>REFUSER LA VIDÉO</h3>
+      <p style="font-size:13px;color:var(--text-light);margin-bottom:12px">Indique la raison du refus. Elle sera visible par le joueur.</p>
+      <div class="field">
+        <label>RAISON DU REFUS</label>
+        <textarea id="m-reason" rows="4" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'Quicksand',sans-serif;font-size:14px;outline:none;width:100%;resize:vertical;line-height:1.5" placeholder="Ex : son du jeu audible, vidéo privée, mauvaise partie...">${esc(m.reason||'')}</textarea>
+      </div>
+      ${S.error?`<div class="err">${esc(S.error)}</div>`:''}
+      <div class="mbtns"><button class="btn sm" id="mod-cancel">Annuler</button><button class="btn sm" id="mod-ok" style="background:var(--rejected);color:#BF360C;border:1.5px solid var(--rejected)">Refuser</button></div>
     </div></div>`;
   if(m.type==='video')return `<div class="mod-bg" id="mod-bg">
     <div class="mod">
@@ -574,7 +589,7 @@ function attach(){
   });
 
   document.getElementById('logout')?.addEventListener('click',async()=>{await sb.auth.signOut();S.user=null;S.profile=null;S.view='auth';S.error='';render();});
-  document.querySelectorAll('[data-tab]').forEach(el=>el.addEventListener('click',()=>{S.appTab=el.dataset.tab;render();}));
+  document.querySelectorAll('[data-tab]').forEach(el=>el.addEventListener('click',async()=>{S.appTab=el.dataset.tab;await loadData();render();}));
   document.getElementById('edit-title')?.addEventListener('click',()=>{if(isAdmin()){S.editTitle=true;render();}});
   document.getElementById('save-title')?.addEventListener('click',async()=>{
     const v=(document.getElementById('title-inp').value||'').trim();
@@ -619,8 +634,8 @@ function attach(){
   document.querySelectorAll('[data-approve]').forEach(el=>el.addEventListener('click',async()=>{
     await sb.from('videos').update({status:'approved'}).eq('id',+el.dataset.approve);await loadData();render();
   }));
-  document.querySelectorAll('[data-reject]').forEach(el=>el.addEventListener('click',async()=>{
-    await sb.from('videos').update({status:'rejected'}).eq('id',+el.dataset.reject);await loadData();render();
+  document.querySelectorAll('[data-reject]').forEach(el=>el.addEventListener('click',()=>{
+    S.modal={type:'reject',video_id:+el.dataset.reject,reason:''};S.error='';render();
   }));
   document.querySelectorAll('[data-save-role]').forEach(el=>el.addEventListener('click',async()=>{
     const uid=el.dataset.saveRole;
@@ -631,7 +646,12 @@ function attach(){
   document.getElementById('mod-cancel')?.addEventListener('click',()=>{S.modal=null;render();});
   document.getElementById('mod-ok')?.addEventListener('click',async()=>{
     const m=S.modal;S.error='';
-    if(m.type==='part'){
+    if(m.type==='reject'){
+      const reason=(document.getElementById('m-reason').value||'').trim();
+      if(!reason){S.error='Merci d\'indiquer une raison.';render();return;}
+      await sb.from('videos').update({status:'rejected',reject_reason:reason}).eq('id',m.video_id);
+      S.modal=null;await loadData();render();
+    } else if(m.type==='part'){
       const from=document.getElementById('m-from').value;
       const to=document.getElementById('m-to').value;
       const note=(document.getElementById('m-note').value||'').trim();

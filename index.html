@@ -19,7 +19,6 @@
   --success:#A3C9A8;
   /* Couleurs rôles pastel */
   --admin:#B39DDB;
-  --host:#FFD54F;
   --player:#81D4FA;
   --verifier:#AED581;
   /* Couleurs statuts vidéos pastel */
@@ -138,11 +137,6 @@ body{
   background:var(--admin);
   border-color:var(--admin);
   color:#fff;
-}
-.rbadge-host{
-  background:var(--host);
-  border-color:var(--host);
-  color:#7B5E00;
 }
 .rbadge-player{
   background:var(--player);
@@ -277,11 +271,11 @@ async function loadData(){
   S.level=lv;S.parts=pts||[];S.videos=vids||[];S.profiles=profs||[];
 }
 
-function isAdmin(){return S.profile&&['admin','host'].includes(S.profile.role);}
+function isAdmin(){return S.profile&&['admin','verifier'].includes(S.profile.role);}
 function videoFor(pid){return S.videos.find(v=>v.part_id===pid);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function roleBadgeStyle(r){const c={admin:'var(--pu)',host:'var(--yl)',player:'var(--bl)',verifier:'var(--gr)'}[r]||'var(--mu)';return `border-color:${c};color:${c}`;}
-function roleLabel(r){return {admin:'Admin',host:'Host',player:'Joueur',verifier:'Vérif.'}[r]||r||'';}
+function roleBadgeStyle(r){const c={admin:'var(--pu)',player:'var(--bl)',verifier:'var(--gr)'}[r]||'var(--mu)';return `border-color:${c};color:${c}`;}
+function roleLabel(r){return {admin:'Admin',player:'Joueur',verifier:'Vérif.'}[r]||r||'';}
 function vidStatusStyle(s){const c={pending:'var(--yl)',approved:'var(--gr)',rejected:'var(--rd)'}[s]||'var(--mu)';return `border-color:${c};color:${c}`;}
 function vidStatusLabel(s){return {pending:'En attente',approved:'Validée',rejected:'Rejetée'}[s]||s;}
 
@@ -447,7 +441,6 @@ function buildInfo(){
       <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px;font-size:14px">
         ${[
           ['admin','Admin','Gère tout : parties, membres, vidéos, titre du niveau.'],
-          ['host','Host','Organise la collab, assigne les parties et valide les vidéos.'],
           ['verifier','Vérif.','Peut regarder et valider/rejeter les vidéos soumises.'],
           ['player','Joueur','Revendique une partie, soumet et modifie sa vidéo.'],
         ].map(([r,label,desc])=>`<div style="display:flex;gap:10px;align-items:flex-start">
@@ -478,7 +471,7 @@ function buildAdmin(){
           <span class="name">${esc(pr.username)}</span>
           <span class="rbadge" style="${roleBadgeStyle(pr.role)}">${roleLabel(pr.role)}</span>
           <select data-role-uid="${pr.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:5px;padding:4px 8px;color:var(--tx);font-family:'Rajdhani',sans-serif;font-size:13px">
-            ${['admin','host','player','verifier'].map(r=>`<option value="${r}" ${pr.role===r?'selected':''}>${roleLabel(r)}</option>`).join('')}
+            ${['admin','player','verifier'].map(r=>`<option value="${r}" ${pr.role===r?'selected':''}>${roleLabel(r)}</option>`).join('')}
           </select>
           <button class="btn sm pu" data-save-role="${pr.id}">Sauver</button>
         </div>`).join('')}

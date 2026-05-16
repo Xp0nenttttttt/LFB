@@ -649,7 +649,12 @@ function attach(){
     if(m.type==='reject'){
       const reason=(document.getElementById('m-reason').value||'').trim();
       if(!reason){S.error='Merci d\'indiquer une raison.';render();return;}
-      await sb.from('videos').update({status:'rejected',reject_reason:reason}).eq('id',m.video_id);
+      const res = await sb.from('videos').update({status:'rejected',reject_reason:reason}).eq('id',m.video_id);
+      if(res.error){
+        S.error = 'Erreur Supabase : ' + res.error.message;
+        render();
+        return;
+      }
       S.modal=null;await loadData();render();
     } else if(m.type==='part'){
       const from=document.getElementById('m-from').value;

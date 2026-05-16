@@ -665,8 +665,17 @@ function attach(){
       const hardest=(document.getElementById('m-hardest').value||'').trim();
       if(!url){S.error='Entre un lien.';render();return;}
       const existing=videoFor(m.part_id);
-      if(existing){await sb.from('videos').update({url,hardest,status:'pending'}).eq('id',existing.id);}
-      else{await sb.from('videos').insert({part_id:m.part_id,player_id:S.profile.id,url,hardest,status:'pending'});}
+      let res;
+      if(existing){
+        res = await sb.from('videos').update({url,hardest,status:'pending'}).eq('id',existing.id);
+      } else {
+        res = await sb.from('videos').insert({part_id:m.part_id,player_id:S.profile.id,url,hardest,status:'pending'});
+      }
+      if(res.error){
+        S.error = 'Erreur Supabase : ' + res.error.message;
+        render();
+        return;
+      }
       S.modal=null;await loadData();render();
     }
   });
